@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "campus-customs-tickets": {
+      "command": "/Users/shobzz/Documents/Yale MBA/Academics/MGT 409 - AI Foundations/Hmwrk 5/.venv/bin/fastmcp",
+      "args": [
+        "run",
+        "/Users/shobzz/Documents/Yale MBA/Academics/MGT 409 - AI Foundations/Hmwrk 5/mcp_server/server.py:mcp"
+      ]
+    }
+  }
+}

@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b4e">
+  <title>Campus Customs | Ticket Planning Desk</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --navy: #102b4e;
+      --navy-deep: #0b203b;
+      --blue: #286090;
+      --sky: #e7f1fa;
+      --paper: #ffffff;
+      --canvas: #f3f6f9;
+      --ink: #1b2a3a;
+      --muted: #59697a;
+      --line: #d7e0e8;
+      --gold: #f5c45e;
+      --green: #246446;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; color: var(--ink); background: var(--canvas); line-height: 1.55; }
+    button, textarea { font: inherit; }
+    button:focus-visible, textarea:focus-visible { outline: 3px solid #75b9ec; outline-offset: 2px; }
+
+    .site-header {
+      position: sticky;
+      z-index: 10;
+      top: 0;
+      color: #fff;
+      background: var(--navy);
+      box-shadow: 0 5px 18px rgb(11 32 59 / 18%);
+    }
+    .header-inner, main { width: min(1120px, calc(100% - 36px)); margin-inline: auto; }
+    .header-inner { padding-top: 17px; }
+    .brand-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { margin: 0; font-size: 1.18rem; font-weight: 800; letter-spacing: .02em; }
+    .brand span { color: var(--gold); }
+    .header-note { margin: 0; color: #d7e6f4; font-size: .88rem; }
+
+    .tabs {
+      display: flex;
+      gap: 7px;
+      overflow-x: auto;
+      margin-top: 15px;
+      scrollbar-width: thin;
+    }
+    .tab {
+      flex: 0 0 auto;
+      min-height: 45px;
+      padding: 10px 15px;
+      border: 1px solid transparent;
+      border-bottom: 0;
+      border-radius: 10px 10px 0 0;
+      color: #e6eef7;
+      background: transparent;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background .16s ease, color .16s ease;
+    }
+    .tab:hover { background: rgb(255 255 255 / 10%); }
+    .tab[aria-selected="true"] { color: var(--navy); background: var(--paper); }
+
+    main { padding: 26px 0 48px; }
+    .intro { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 18px; }
+    .eyebrow { margin: 0 0 4px; color: var(--blue); font-size: .76rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h1, h2, h3, p { margin-top: 0; }
+    .intro h1 { margin-bottom: 4px; color: var(--navy); font-size: clamp(1.75rem, 4vw, 2.3rem); line-height: 1.15; }
+    .intro-copy { margin-bottom: 0; color: var(--muted); }
+    .save-status { flex: 0 0 auto; color: var(--green); font-size: .82rem; font-weight: 700; }
+    .scope-note { margin: 0 0 21px; padding: 11px 14px; border: 1px solid #c7d9e9; border-radius: 10px; color: #294761; background: #eaf3fb; font-size: .89rem; }
+
+    .panel[hidden] { display: none; }
+    .ticket-hero {
+      display: grid;
+      min-height: 210px;
+      place-content: center;
+      padding: 24px;
+      border-radius: 18px;
+      color: #fff;
+      text-align: center;
+      background: radial-gradient(circle at 80% 15%, #285780 0, transparent 32%), linear-gradient(125deg, var(--navy-deep), var(--navy));
+      box-shadow: 0 14px 30px rgb(16 43 78 / 15%);
+    }
+    .ticket-hero .hero-kicker { margin: 0 0 4px; color: #c7def1; font-size: .78rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+    .ticket-hero h2 { margin: 0; color: var(--gold); font-size: clamp(2.6rem, 8vw, 5rem); font-weight: 900; letter-spacing: .045em; line-height: 1.05; }
+    .ticket-hero p { max-width: 560px; margin: 10px auto 0; color: #edf4fb; }
+
+    .ticket-heading { display: flex; align-items: start; justify-content: space-between; gap: 18px; margin: 24px 0 14px; }
+    .ticket-heading h2 { margin-bottom: 3px; color: var(--navy); font-size: 1.45rem; }
+    .ticket-heading p { margin: 0; color: var(--muted); }
+    .status-pill { flex: 0 0 auto; padding: 5px 10px; border: 1px solid #b7d6c6; border-radius: 999px; color: #245d40; background: #e8f5ed; font-size: .8rem; font-weight: 800; text-transform: uppercase; }
+
+    .facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    .fact { min-height: 94px; padding: 14px 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+    .fact-label { display: block; margin-bottom: 5px; color: var(--muted); font-size: .72rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .fact strong { color: var(--navy); font-size: 1rem; overflow-wrap: anywhere; }
+    .detail-note { margin: 12px 0 0; padding: 13px 15px; border-left: 4px solid var(--gold); border-radius: 0 9px 9px 0; color: #3f5061; background: #fff9e9; }
+
+    .work-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 22px; }
+    .work-card { padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); box-shadow: 0 5px 14px rgb(19 46 75 / 4%); }
+    .work-card h3 { display: flex; align-items: center; gap: 9px; margin-bottom: 5px; color: var(--navy); font-size: 1.15rem; }
+    .work-card h3::before { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--blue); content: ""; }
+    .actual-card h3::before { background: var(--gold); }
+    .work-card > p { min-height: 43px; margin-bottom: 12px; color: var(--muted); font-size: .9rem; }
+    label { display: block; margin-bottom: 6px; color: #34485c; font-size: .82rem; font-weight: 800; }
+    textarea {
+      display: block;
+      width: 100%;
+      min-height: 155px;
+      resize: vertical;
+      padding: 12px 13px;
+      border: 1px solid #bdcad6;
+      border-radius: 10px;
+      color: var(--ink);
+      background: #fcfdff;
+      line-height: 1.5;
+    }
+    textarea::placeholder { color: #8492a0; }
+    .field-hint { margin: 8px 0 0; color: #718090; font-size: .77rem; }
+
+    .section-title { margin: 25px 0 5px; color: var(--navy); font-size: 1.45rem; }
+    .section-subtitle { margin-bottom: 17px; color: var(--muted); }
+    .cash-topline { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px; }
+    .cash-card { padding: 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+    .cash-card .amount { display: block; margin: 5px 0 4px; color: var(--navy); font-size: 1.8rem; font-weight: 900; line-height: 1.1; }
+    .cash-card p { margin: 0; color: var(--muted); font-size: .87rem; }
+    .cash-table-wrap { overflow-x: auto; margin-top: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid #e4eaf0; vertical-align: top; }
+    th { color: var(--navy); background: #edf3f8; font-size: .79rem; letter-spacing: .04em; text-transform: uppercase; }
+    td { font-size: .9rem; }
+    tbody tr:last-child td { border-bottom: 0; }
+    .cash-note { margin: 13px 0 0; padding: 13px 15px; border-radius: 10px; color: #495869; background: #edf3f8; font-size: .87rem; }
+    .reflection-prompts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+    .reflection-prompt { padding: 14px; border: 1px solid var(--line); border-radius: 12px; color: #34485c; background: #fff; font-weight: 700; }
+    .reflection-prompt span { display: block; margin-bottom: 4px; color: var(--blue); font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; }
+    .page-footer { margin-top: 25px; padding-top: 13px; border-top: 1px solid var(--line); color: #718090; font-size: .78rem; }
+
+    @media (max-width: 760px) {
+      .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .cash-topline, .reflection-prompts { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 600px) {
+      .header-inner, main { width: min(100% - 24px, 1120px); }
+      .header-inner { padding-top: 12px; }
+      .brand-row { align-items: start; flex-direction: column; gap: 2px; }
+      .tab { min-height: 42px; padding: 9px 12px; font-size: .87rem; }
+      main { padding-top: 20px; }
+      .intro { align-items: start; flex-direction: column; gap: 6px; }
+      .ticket-heading { flex-direction: column; gap: 7px; }
+      .work-grid { grid-template-columns: 1fr; }
+      .ticket-hero { min-height: 185px; }
+      .work-card > p { min-height: auto; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="brand-row">
+        <p class="brand">CAMPUS <span>CUSTOMS</span> · PLANNING DESK</p>
+      <p class="header-note">Homework 5 · Problem 9 · Actual outcomes from the recorded agent runs</p>
+      </div>
+      <nav class="tabs" role="tablist" aria-label="Planning sections">
+        <button class="tab" id="tab-101" role="tab" aria-controls="panel-101" aria-selected="true" tabindex="0" data-target="panel-101">Ticket 101</button>
+        <button class="tab" id="tab-102" role="tab" aria-controls="panel-102" aria-selected="false" tabindex="-1" data-target="panel-102">Ticket 102</button>
+        <button class="tab" id="tab-103" role="tab" aria-controls="panel-103" aria-selected="false" tabindex="-1" data-target="panel-103">Ticket 103</button>
+        <button class="tab" id="tab-cash" role="tab" aria-controls="panel-cash" aria-selected="false" tabindex="-1" data-target="panel-cash">Cash</button>
+        <button class="tab" id="tab-reflection" role="tab" aria-controls="panel-reflection" aria-selected="false" tabindex="-1" data-target="panel-reflection">Reflection</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="intro">
+      <div>
+        <p class="eyebrow">Operations · Ticket planning</p>
+        <h1>Ticket run review.</h1>
+        <p class="intro-copy">Expected notes remain yours to compare. Actual sections below reflect the database and append-only run log.</p>
+      </div>
+      <span class="save-status" id="save-status" aria-live="polite">Notes save in this browser</span>
+    </div>
+    <p class="scope-note"><strong>Scope:</strong> this page covers the three operational tickets, 101–103. The database also has ticket 104, the Problem 4 MCP smoke-test record; it is excluded from this planning set.</p>
+
+    <section class="panel" id="panel-101" role="tabpanel" aria-labelledby="tab-101">
+      <div class="ticket-heading">
+        <div><h2>Bulldog tee</h2><p>Requester: Tauhid Zaman · Status: blocked</p></div>
+        <span class="status-pill">Blocked</span>
+      </div>
+      <div class="facts">
+        <div class="fact"><span class="fact-label">Request</span><strong>1 tee · size S</strong></div>
+        <div class="fact"><span class="fact-label">Product</span><strong>Classic Bulldog Tee</strong></div>
+        <div class="fact"><span class="fact-label">Exact size-S stock</span><strong>0 on hand</strong></div>
+        <div class="fact"><span class="fact-label">Linked invoice</span><strong>#501 · $840 · paid</strong></div>
+      </div>
+      <p class="detail-note">Ticket note: “Needs a tee in size S.” Invoice 501 is for the rush reprint of this SKU and is linked to Bulldog Print Co. It was due 2026-08-28.</p>
+      <div class="work-grid">
+        <article class="work-card">
+          <h3>Expected</h3>
+          <p>Before the run: what do you expect the team to conclude about size-S availability, the invoice, and the ticket’s next step?</p>
+          <label for="expected-101">My expected outcome</label>
+          <textarea id="expected-101" data-save-key="expected-101" placeholder="Write your prediction here…"></textarea>
+          <p class="field-hint">Saved automatically in this browser.</p>
+        </article>
+        <article class="work-card actual-card">
+          <h3>Actual</h3>
+          <p>Final database status and observed run history; approval is not the same as receiving stock.</p>
+          <label for="actual-101">Actual agent outcome</label>
+          <textarea id="actual-101" data-save-key="actual-101" placeholder="Complete after the agent run…">Final database status: blocked. Boss delegated the exact stock/vendor recheck to Inventory and cost/cash review to Accounting, then checked live approval state and closed with a blocker. Inventory used get_today, get_ticket, check_stock, find_vendors_for_sku, vendor_status, run_select, and add_agent_note: CC-TEE-WHITE size S remains 0 on hand for 1 requested; Bulldog Print Co (vendor 1) is only an apparel-category candidate (no formal SKU mapping), has no open invoices, and lists a 5-day lead time (expected 2026-09-05 from desk date 2026-08-31). Accounting used get_today, get_ticket, get_cash, run_select, create_purchase_order, and add_agent_note: SKU-level unit_cost is $8 (pricing has no size field), checking was $160 before the request, and PO approval #3 was created for one unit at the database cost basis—not a vendor quote. User approved #3; payment row #3 records $8 and checking became $152. A subsequent Inventory check confirmed stock is still 0 and no receipt is recorded. Boss marked the ticket blocked; no pending approvals remain. Customer Service was not called and no ticket-101 draft exists. The approved request does not prove shipment or fulfillment.</textarea>
+          <p class="field-hint">Use the audit trail and ticket record to ground your comparison.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-102" role="tabpanel" aria-labelledby="tab-102" hidden>
+      <div class="ticket-heading">
+        <div><h2>Rent due</h2><p>Requester: Elm City Properties · Status: resolved</p></div>
+        <span class="status-pill">Resolved</span>
+      </div>
+      <div class="facts">
+        <div class="fact"><span class="fact-label">Lease</span><strong>#1 · Chapel Street shop</strong></div>
+        <div class="fact"><span class="fact-label">Landlord</span><strong>Elm City Properties</strong></div>
+        <div class="fact"><span class="fact-label">Monthly rent</span><strong>$2,400</strong></div>
+        <div class="fact"><span class="fact-label">Next due</span><strong>2026-09-02</strong></div>
+      </div>
+      <p class="detail-note">Ticket note: “Email: shop rent due in 2 days.” The database desk date is 2026-08-31. No additional lease terms, late-fee details, or renewal dates are recorded in the lease row.</p>
+      <div class="work-grid">
+        <article class="work-card">
+          <h3>Expected</h3>
+          <p>Before the run: what should Facilities check, and when should Accounting become involved?</p>
+          <label for="expected-102">My expected outcome</label>
+          <textarea id="expected-102" data-save-key="expected-102" placeholder="Write your prediction here…"></textarea>
+          <p class="field-hint">Saved automatically in this browser.</p>
+        </article>
+        <article class="work-card actual-card">
+          <h3>Actual</h3>
+          <p>Recorded result from the completed workflow, including the approval gate and final ticket status.</p>
+          <label for="actual-102">Actual agent outcome</label>
+          <textarea id="actual-102" data-save-key="actual-102" placeholder="Complete after the agent run…">Final database status: resolved. Boss delegated lease verification to Facilities and payment/cash review to Accounting, then checked pending approvals and resolved the ticket after payment evidence was verified. Facilities used get_today, get_ticket, get_leases, and add_agent_note: lease 1 records $2,400 rent due 2026-09-02, not overdue on desk date 2026-08-31; no other lease terms were recorded. Accounting checked cash, invoices, and existing actions; human approval #2 paid lease 1, with payment row #2 for $2,400 approved by User. Boss's later run used the verified payment record/board note, avoided a duplicate payment, and called resolve_ticket(status=resolved). Inventory and Customer Service were not called. Checking after this payment was $160; later ticket-101 PO approval reduced it by a further $8 to $152.</textarea>
+          <p class="field-hint">Use the audit trail and ticket record to ground your comparison.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-103" role="tabpanel" aria-labelledby="tab-103" hidden>
+      <div class="ticket-heading">
+        <div><h2>Bulk hoodie discount</h2><p>Requester: Yale AI Club · Status: blocked</p></div>
+        <span class="status-pill">Blocked</span>
+      </div>
+      <div class="facts">
+        <div class="fact"><span class="fact-label">Request</span><strong>20 hoodies · size M</strong></div>
+        <div class="fact"><span class="fact-label">Product</span><strong>Basic Hoodie Big Yale</strong></div>
+        <div class="fact"><span class="fact-label">Size-M stock</span><strong>8 on hand · shortfall 12</strong></div>
+        <div class="fact"><span class="fact-label">List / unit cost</span><strong>$58 / $22</strong></div>
+      </div>
+      <p class="detail-note">Ticket note: “Student org wants 20 hoodies, size M, asking for a bulk discount.” The ticket does not record a proposed discounted price.</p>
+      <div class="work-grid">
+        <article class="work-card">
+          <h3>Expected</h3>
+          <p>Before the run: what should Inventory establish, and what pricing fact must Accounting know before deciding?</p>
+          <label for="expected-103">My expected outcome</label>
+          <textarea id="expected-103" data-save-key="expected-103" placeholder="Write your prediction here…"></textarea>
+          <p class="field-hint">Saved automatically in this browser.</p>
+        </article>
+        <article class="work-card actual-card">
+          <h3>Actual</h3>
+          <p>Recorded result from the final workflow, including the saved draft and the facts that still block approval.</p>
+          <label for="actual-103">Actual agent outcome</label>
+          <textarea id="actual-103" data-save-key="actual-103" placeholder="Complete after the agent run…">Final database status: blocked. Boss reused Accounting's prior margin analysis, delegated an exact inventory recheck to Inventory, then asked Customer Service to save a draft and closed with the blocker. Accounting's saved analysis records unit cost $22, list price $58, and 62.07% list-price gross margin; the ticket has no proposed discount price, so discounted margin is unknown and no discount was approved. Inventory used get_today, get_ticket, and check_stock: CC-HOOD-NAVY size M has 8 at Aisle A for 20 requested, shortfall 12. Customer Service used get_today, get_ticket, check_stock, and save_draft; draft #1 asks for a proposed per-unit price and explains the 8-unit stock shortfall. The draft was not sent. No purchase/payment approval was created. Needed to proceed: a proposed per-unit price for Accounting review and a plan for the 12-unit shortfall.</textarea>
+          <p class="field-hint">Use the audit trail and ticket record to ground your comparison.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-cash" role="tabpanel" aria-labelledby="tab-cash" hidden>
+      <div class="ticket-hero">
+        <p class="hero-kicker">Database reconciliation · desk date 2026-08-31</p>
+        <h2>Cash movement</h2>
+        <p>Human approval is recorded for invoice #501, lease #1, and the one-unit tee restock request. The database balance includes all three movements.</p>
+      </div>
+      <h2 class="section-title">Cash</h2>
+      <p class="section-subtitle">The balance below reconciles to <code>cash_accounts</code> after the ticket runs and three human approvals.</p>
+      <div class="cash-topline">
+        <article class="cash-card"><span class="fact-label">Starting checking balance</span><strong class="amount">$3,400</strong><p>Database opening value · 2026-08-31</p></article>
+        <article class="cash-card"><span class="fact-label">Actual cash movement</span><strong class="amount">−$3,248</strong><p>Approvals #1, #2, and #3 · 3 payment rows</p></article>
+        <article class="cash-card"><span class="fact-label">Ending checking balance</span><strong class="amount">$152</strong><p>Matches working database · 2026-08-31</p></article>
+      </div>
+      <div class="cash-table-wrap">
+        <table>
+          <thead><tr><th>Ticket</th><th>Actual cash change</th><th>Recorded action and reason</th><th>Approval state</th></tr></thead>
+          <tbody>
+            <tr><td>101 · Bulldog tee</td><td>−$840; −$8</td><td>Approval #1 paid overdue invoice #501 to Bulldog Print Co. Approval #3 records the one-unit PO request at the SKU-level $8 cost basis (not a vendor quote); stock receipt is not recorded.</td><td>Both approved by User · payment rows #1 and #3</td></tr>
+            <tr><td>102 · Rent due</td><td>−$2,400</td><td>Approval #2 paid lease #1 rent due 2026-09-02; ticket later resolved.</td><td>Approved by User · payment row #2</td></tr>
+            <tr><td>103 · Bulk hoodie discount</td><td>$0</td><td>Blocked by missing proposed discount price and a 12-unit size-M shortfall; no financial action was requested.</td><td>Blocked · no approval</td></tr>
+            <tr><td><strong>Ending balance</strong></td><td><strong>$152</strong></td><td colspan="2">Cash accounts reconcile to start + actual movement: $3,400 − $840 − $2,400 − $8 = $152.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="cash-note"><strong>Approval record:</strong> actions #1, #2, and #3 were approved by User and are recorded as three payment rows totaling $3,248; no approvals remain pending. The ending $152 balance matches <code>cash_accounts</code>. No revenue or other cash movement was assumed. Final ticket statuses are 101 blocked, 102 resolved, and 103 blocked; approval alone does not prove stock receipt.</p>
+      <div class="work-grid">
+        <article class="work-card">
+          <h3>Expected</h3>
+          <p>Before the run: how do you expect Accounting to prioritize the known obligations, given their dates and available cash?</p>
+          <label for="expected-cash">My expected cash plan</label>
+          <textarea id="expected-cash" data-save-key="expected-cash" placeholder="Write your prediction here…"></textarea>
+        </article>
+        <article class="work-card actual-card">
+          <h3>Actual</h3>
+          <p>Actual cash movement and the reason are reconciled above; the Expected section remains unchanged for comparison.</p>
+          <label for="actual-cash">Actual cash outcome</label>
+          <textarea id="actual-cash" data-save-key="actual-cash" placeholder="Complete after the agent run…">Starting balance: $3,400. Ticket 101: −$840 when approval #1 paid overdue invoice 501, then −$8 when approval #3 recorded the one-unit PO request at the database unit-cost basis. Ticket 102: −$2,400 when approval #2 paid lease 1 rent. Ticket 103: $0; no financial action was requested. Ending balance: $152, matching cash_accounts: $3,400 − $840 − $2,400 − $8 = $152. Payments contains three rows and no approvals remain pending. The tee is still not recorded in inventory, so ticket 101 remains blocked rather than resolved.</textarea>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="panel-reflection" role="tabpanel" aria-labelledby="tab-reflection" hidden>
+      <div class="ticket-hero">
+        <p class="hero-kicker">Learning notes</p>
+        <h2>Agent-run reflection</h2>
+        <p>Review what matched your expectations, what surprised you, and where the agent workflow could improve.</p>
+      </div>
+      <h2 class="section-title">Reflection</h2>
+      <p class="section-subtitle">Your observations from the three operational ticket runs.</p>
+      <div class="reflection-prompts">
+        <div class="reflection-prompt"><span>Before</span>What would make the agents’ decisions well-grounded?</div>
+        <div class="reflection-prompt"><span>Compare</span>Where did the actual treatment match or differ from your expectations?</div>
+        <div class="reflection-prompt"><span>Improve</span>What would you change in the tools, prompts, or handoffs?</div>
+      </div>
+      <article class="work-card">
+        <label for="reflection-notes">Reflection notes</label>
+        <textarea id="reflection-notes" data-save-key="reflection-notes" style="min-height: 280px" placeholder="Write notes before and after the agent run…">Ticket 101: The agents worked as expected, the workflow from Boss to Inventory and Accounting agents were sequenced as expected, using the tools to perform the task. What I did not expect, but is a pleasant surprise, is that the Inventory agent used the tool to re-stock order, but the vendor details does not contain stock availability by product type (i.e.SKU), only describes the vendor apparel category. The Boss agent blocked the payment/approval because Inventory agent was not able to re-order stock, the correct decision.
+
+Ticket 102: worked as expected, the Boss agent sent the instructions to the Facilities agent, the agent confirmed the payment terms and due date. The boss agent then sent instructions to the Accounting agent, which checked balances and cash amount, requested human approval and Boss agent resolved ticket.
+
+Ticket 103: This is where the ticket did not perform as expected. The accounting agent did a margin analysis run one time, calculated based on unit price and cost, but did not reduce the margin to account for discount. The margins remain fixed because agent did not have discounted price. The Inventory agent returned a stock shortfall by 12 units (only 8 available in stock) but did not re-order new stock. Thus, Boss agent blocked approval.
+
+What new problems it can solve:
+1) Stock-level questions. Example: “How many Bulldog hoodies in medium do we have, and where are they?”
+2) Price quote requests. Example: “How much for 20 mugs?”
+3) Can we afford it. Example: “Can we spend $300 on supplies this week?”
+4) Upcoming due checks. Example: “What checks are due in 2 weeks?”
+
+What it can't do:
+1) It can't email a customer, contact a vendor, or pay anything.
+2) By design, it also can't confirm that goods arrived. Tickets like 101 end up “blocked” until someone records the receipt.
+3) It can't handle requests for information that isn't in the database. For example, in Ticket 101, it doesn't know which vendor carries which products and sizes, so it can't establish which vendor can fill the order.
+4) It can't handle conflicts between tickets. For example, two tickets competing for the same scarce cash are handled one at a time, so the system doesn't plan across the whole queue.
+
+What would have been simpler with one agent:
+Simple lookups like stock counts, price quotes, and cash checks would have been simpler with one agent. Each needs only one or two tools and one domain, so having the Boss delegate to a specialist adds extra model calls, cost, and delay without improving accuracy. A single agent with all the tools could answer directly. The multi-agent setup pays off mainly on mixed tickets that need judgment from several specialists.</textarea>
+        <p class="field-hint">Saved automatically in this browser.</p>
+      </article>
+    </section>
+
+    <footer class="page-footer">Source: <code>data/campus_customs_new.db</code> (read-only planning snapshot). Ticket 104 is excluded because it is the Problem 4 system-test ticket, not one of the three operational cases.</footer>
+  </main>
+
+  <script>
+    (() => {
+      const tabs = Array.from(document.querySelectorAll('[role="tab"]'));
+      const panels = Array.from(document.querySelectorAll('[role="tabpanel"]'));
+      const status = document.getElementById('save-status');
+      const storageKey = 'campus-customs-hw5-problem6-planning';
+
+      function activateTab(tab, moveFocus = false) {
+        tabs.forEach((item) => {
+          const active = item === tab;
+          item.setAttribute('aria-selected', String(active));
+          item.tabIndex = active ? 0 : -1;
+        });
+        panels.forEach((panel) => { panel.hidden = panel.id !== tab.dataset.target; });
+        if (moveFocus) tab.focus();
+      }
+
+      tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => activateTab(tab));
+        tab.addEventListener('keydown', (event) => {
+          let targetIndex = index;
+          if (event.key === 'ArrowRight') targetIndex = (index + 1) % tabs.length;
+          else if (event.key === 'ArrowLeft') targetIndex = (index - 1 + tabs.length) % tabs.length;
+          else if (event.key === 'Home') targetIndex = 0;
+          else if (event.key === 'End') targetIndex = tabs.length - 1;
+          else return;
+          event.preventDefault();
+          activateTab(tabs[targetIndex], true);
+        });
+      });
+
+      const fields = Array.from(document.querySelectorAll('[data-save-key]'));
+      try {
+        const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+        fields.forEach((field) => {
+          const key = field.dataset.saveKey;
+          if (typeof saved[key] === 'string') {
+            const reflectionAppendMarker = '\n\nWhat new problems it can solve:';
+            const reflectionAppendIndex = field.value.indexOf(reflectionAppendMarker);
+            const hasNewReflectionSections = key === 'reflection-notes' && reflectionAppendIndex >= 0 && !saved[key].includes('What new problems it can solve:');
+            if (hasNewReflectionSections) {
+              const savedReflection = saved[key].trim() ? saved[key].trimEnd() : field.value.slice(0, reflectionAppendIndex).trimEnd();
+              field.value = savedReflection + field.value.slice(reflectionAppendIndex);
+              saved[key] = field.value;
+              try { localStorage.setItem(storageKey, JSON.stringify(saved)); } catch (_) {}
+            } else {
+              const isActualWithNewRecord = key.startsWith('actual-') && saved[key].trim() === '' && field.value.trim() !== '';
+              const isPrefilledReflection = key === 'reflection-notes' && saved[key].trim() === '' && field.value.trim() !== '';
+              if (!isActualWithNewRecord && !isPrefilledReflection) field.value = saved[key];
+            }
+          }
+        });
+      } catch (_) {
+        status.textContent = 'Browser storage unavailable';
+        status.style.color = '#8b3b32';
+      }
+
+      fields.forEach((field) => field.addEventListener('input', () => {
+        try {
+          const values = Object.fromEntries(fields.map((item) => [item.dataset.saveKey, item.value]));
+          localStorage.setItem(storageKey, JSON.stringify(values));
+          status.textContent = 'Notes saved in this browser';
+          status.style.color = '';
+        } catch (_) {
+          status.textContent = 'Could not save — copy your notes before closing';
+          status.style.color = '#8b3b32';
+        }
+      }));
+    })();
+  </script>
+</body>
+</html>

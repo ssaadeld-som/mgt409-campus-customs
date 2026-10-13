@@ -1,0 +1,120 @@
+{
+  "database": "data/campus_customs_new.db",
+  "connection": ".mcp.json \u2192 campus-customs-tickets \u2192 mcp_server/server.py:mcp",
+  "tests": [
+    {
+      "prompt_asked": "Find me ticket 101.",
+      "tool_name": "search_tickets",
+      "arguments": {
+        "query": "101"
+      },
+      "tool_output": {
+        "result": [
+          {
+            "id": 101,
+            "type": "customer_order",
+            "requester": "Tauhid Zaman",
+            "subject": "Bulldog tee",
+            "sku": "CC-TEE-WHITE",
+            "size": "S",
+            "qty": 1,
+            "lease_id": null,
+            "invoice_id": 501,
+            "status": "open",
+            "notes": "Needs a tee in size S.",
+            "created_at": "2026-08-31T09:15:00-04:00"
+          }
+        ]
+      }
+    },
+    {
+      "prompt_asked": "Give me ticket 101 and its status.",
+      "tool_name": "get_ticket",
+      "arguments": {
+        "ticket_id": 101
+      },
+      "tool_output": {
+        "id": 101,
+        "type": "customer_order",
+        "requester": "Tauhid Zaman",
+        "subject": "Bulldog tee",
+        "sku": "CC-TEE-WHITE",
+        "size": "S",
+        "qty": 1,
+        "lease_id": null,
+        "invoice_id": 501,
+        "status": "open",
+        "notes": "Needs a tee in size S.",
+        "created_at": "2026-08-31T09:15:00-04:00"
+      }
+    },
+    {
+      "prompt_asked": "Create a new Problem 4 smoke-test ticket and assign it as open.",
+      "tool_name": "create_ticket",
+      "arguments": {
+        "ticket_type": "system_test",
+        "requester": "Codex",
+        "subject": "Problem 4 MCP smoke test",
+        "status": "open"
+      },
+      "tool_output": {
+        "id": 104,
+        "type": "system_test",
+        "requester": "Codex",
+        "subject": "Problem 4 MCP smoke test",
+        "sku": null,
+        "size": null,
+        "qty": null,
+        "lease_id": null,
+        "invoice_id": null,
+        "status": "open",
+        "notes": null,
+        "created_at": "2026-10-06T15:17:23.447093+00:00"
+      }
+    },
+    {
+      "prompt_asked": "Keep the new ticket status as open.",
+      "tool_name": "update_ticket_status",
+      "arguments": {
+        "ticket_id": 104,
+        "status": "open"
+      },
+      "tool_output": {
+        "id": 104,
+        "type": "system_test",
+        "requester": "Codex",
+        "subject": "Problem 4 MCP smoke test",
+        "sku": null,
+        "size": null,
+        "qty": null,
+        "lease_id": null,
+        "invoice_id": null,
+        "status": "open",
+        "notes": null,
+        "created_at": "2026-10-06T15:17:23.447093+00:00"
+      }
+    },
+    {
+      "prompt_asked": "Add the note \"test ticket - Problem 4\" to the new ticket.",
+      "tool_name": "add_ticket_note",
+      "arguments": {
+        "ticket_id": 104,
+        "note": "test ticket - Problem 4"
+      },
+      "tool_output": {
+        "id": 104,
+        "type": "system_test",
+        "requester": "Codex",
+        "subject": "Problem 4 MCP smoke test",
+        "sku": null,
+        "size": null,
+        "qty": null,
+        "lease_id": null,
+        "invoice_id": null,
+        "status": "open",
+        "notes": "test ticket - Problem 4",
+        "created_at": "2026-10-06T15:17:23.447093+00:00"
+      }
+    }
+  ]
+}

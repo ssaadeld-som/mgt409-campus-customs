@@ -1,0 +1,132 @@
+{
+  "homework": 5,
+  "problem": 9,
+  "run_date_utc": "2026-10-11",
+  "desk_date": "2026-08-31",
+  "working_database": "data/campus_customs_new.db",
+  "completion_note": "The ticket team processed all three operational tickets without resetting the working database again. Ticket 102 is resolved. Ticket 101 is blocked because the approved one-unit restock has no recorded receipt and size-S inventory remains zero. Ticket 103 is blocked pending a proposed discount price and a plan for the 12-unit size-M shortfall. Customer Service saved an unsent draft for ticket 103. All human approvals are recorded; the database has no pending approvals.",
+  "cash_reconciliation": {
+    "account": "checking",
+    "starting_balance": 3400.0,
+    "approved_cash_change": -3248.0,
+    "ending_balance": 152.0,
+    "payments_recorded": 3,
+    "approved_payment_total": 3248.0,
+    "pending_approval_total": 0.0,
+    "available_balance_after_approvals": 152.0,
+    "reconciles_to_working_database": true,
+    "movements": [
+      {"ticket_id": 101, "action_id": 1, "payment_id": 1, "amount": -840.0, "reason": "Paid overdue invoice 501 to clear Bulldog Print Co's recorded invoice blocker.", "balance_after": 2560.0},
+      {"ticket_id": 102, "action_id": 2, "payment_id": 2, "amount": -2400.0, "reason": "Paid lease 1 rent due 2026-09-02.", "balance_after": 160.0},
+      {"ticket_id": 101, "action_id": 3, "payment_id": 3, "amount": -8.0, "reason": "Approved one-unit purchase-order request using the recorded SKU-level unit_cost basis; this does not establish delivery.", "balance_after": 152.0}
+    ]
+  },
+  "tickets": [
+    {
+      "ticket_id": 101,
+      "final_status": "blocked",
+      "short_outcome": "Inventory still records 0 of 1 requested CC-TEE-WHITE size S. Invoice 501 ($840) was paid and the vendor blocker cleared. Accounting prepared PO approval #3 for one unit using the SKU-level unit_cost of $8 as the tool-enforced approval amount basis (not a vendor quote); User approved it and payment row #3 reduced checking by $8. Inventory later verified size-S quantity is still 0 and no receipt is recorded, so Boss left the ticket blocked. No Customer Service draft was created.",
+      "agent_contributions": {
+        "Boss": {
+          "contribution": "Delegated the stock/vendor recheck to Inventory and cost/cash review to Accounting. After the purchase action was approved, used live action status, requested another inventory/receipt check, and resolved the ticket as blocked because approval did not prove receipt. No draft was created.",
+          "tools_and_delegations": ["get_today", "get_ticket", "ask_inventory", "ask_accounting", "list_pending_approvals", "resolve_ticket"]
+        },
+        "Inventory": {
+          "contribution": "Checked exact SKU and size, found 0 on hand (shortfall 1), identified Bulldog Print Co as an apparel-category candidate only, checked vendor status (no open invoices, 5-day lead time), and after approval verified PO action #3 while confirming stock remained 0 and no receipt was recorded.",
+          "tools": ["get_today", "get_ticket", "check_stock", "find_vendors_for_sku", "vendor_status", "run_select", "add_agent_note"]
+        },
+        "Accounting": {
+          "contribution": "Verified checking cash of $160 with no pending commitments, read the $8 SKU-level unit_cost for CC-TEE-WHITE (pricing has no size-specific cost), and created pending PO approval #3 for quantity 1 via candidate vendor 1. The amount was the database cost basis, not a supplier quote.",
+          "tools": ["get_today", "get_ticket", "get_cash", "run_select", "create_purchase_order", "add_agent_note"]
+        },
+        "Facilities": {"contribution": "Not called on this ticket.", "tools": []},
+        "Customer Service": {"contribution": "Not called; no ticket-101 draft was saved.", "tools": []}
+      },
+      "human_approvals": [
+        {
+          "approval_id": 1,
+          "action_type": "payment",
+          "amount": 840.0,
+          "reference": "invoice 501",
+          "status": "approved",
+          "approved_by_human": "User",
+          "cash_moved": true,
+          "payment_id": 1,
+          "new_checking_balance": 2560.0
+        },
+        {
+          "approval_id": 3,
+          "action_type": "purchase_order",
+          "amount": 8.0,
+          "reference": "vendor 1 · CC-TEE-WHITE · size S · quantity 1",
+          "status": "approved",
+          "approved_by_human": "User",
+          "cash_moved": true,
+          "payment_id": 3,
+          "new_checking_balance": 152.0,
+          "receipt_recorded": false
+        }
+      ]
+    },
+    {
+      "ticket_id": 102,
+      "final_status": "resolved",
+      "short_outcome": "Facilities verified lease 1 rent of $2,400 due 2026-09-02, not overdue on desk date 2026-08-31. Accounting's request #2 was approved by User and payment row #2 records the rent payment. Boss verified that payment, avoided a duplicate request, and resolved the ticket. Checking was $160 immediately after this payment and $152 after ticket 101's later $8 approval.",
+      "agent_contributions": {
+        "Boss": {
+          "contribution": "Delegated lease facts to Facilities and cash/payment readiness to Accounting, then on a later run used the verified payment record and board note to call resolve_ticket with status resolved.",
+          "tools_and_delegations": ["get_today", "get_ticket", "ask_facilities", "ask_accounting", "list_pending_approvals", "resolve_ticket"]
+        },
+        "Inventory": {"contribution": "Not called on this ticket.", "tools": []},
+        "Accounting": {
+          "contribution": "Checked cash and unpaid invoices, prepared payment approval #2 for lease 1, and later verified the approved payment evidence without creating a duplicate request.",
+          "tools": ["get_today", "get_ticket", "run_select", "get_cash", "get_open_invoices", "request_payment", "add_agent_note"]
+        },
+        "Facilities": {
+          "contribution": "Read lease 1 and confirmed $2,400 monthly rent due 2026-09-02; it was not overdue on the recorded desk date. Other lease terms were not recorded.",
+          "tools": ["get_today", "get_ticket", "get_leases", "add_agent_note"]
+        },
+        "Customer Service": {"contribution": "Not called on this ticket.", "tools": []}
+      },
+      "human_approvals": [
+        {
+          "approval_id": 2,
+          "action_type": "payment",
+          "amount": 2400.0,
+          "reference": "lease 1",
+          "status": "approved",
+          "approved_by_human": "User",
+          "cash_moved": true,
+          "payment_id": 2,
+          "checking_balance_after_payment": 160.0
+        }
+      ]
+    },
+    {
+      "ticket_id": 103,
+      "final_status": "blocked",
+      "short_outcome": "Accounting's recorded analysis gives unit cost $22, list price $58, and 62.07% list-price gross margin, but no proposed discounted price is recorded, so no discount was approved. Inventory reconfirmed 8 of 20 CC-HOOD-NAVY size M (shortfall 12). Customer Service saved draft #1 asking for the proposed unit price and explaining the stock shortfall; it was not sent. No payment or purchase approval exists.",
+      "agent_contributions": {
+        "Boss": {
+          "contribution": "Reused the complete saved margin analysis, delegated the exact inventory check to Inventory, requested a customer-service draft, and saved a blocked resolution identifying the missing price and 12-unit stock shortfall.",
+          "tools_and_delegations": ["get_today", "get_ticket", "ask_inventory", "ask_customer_service", "list_pending_approvals", "resolve_ticket"]
+        },
+        "Inventory": {
+          "contribution": "Reconfirmed 8 units of CC-HOOD-NAVY size M at Aisle A against 20 requested (shortfall 12).",
+          "tools": ["get_today", "get_ticket", "check_stock", "add_agent_note"]
+        },
+        "Accounting": {
+          "contribution": "Earlier recorded analysis established $22 unit cost, $58 list price and 62.07% gross margin at list; it noted a proposed discount price is needed before the discount margin can be assessed. Boss reused that analysis; Accounting was not re-delegated in the final run.",
+          "tools": ["get_today", "get_ticket", "run_select", "add_agent_note"]
+        },
+        "Facilities": {"contribution": "Not called on this ticket.", "tools": []},
+        "Customer Service": {
+          "contribution": "Saved customer draft #1 requesting a proposed per-unit price for Accounting review and explaining that only 8 of 20 size-M hoodies are recorded in stock. The draft was not sent.",
+          "tools": ["get_today", "get_ticket", "check_stock", "save_draft", "add_agent_note"]
+        }
+      },
+      "human_approvals": [],
+      "customer_drafts": [{"draft_id": 1, "status": "draft", "sent": false}]
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b4e">
+  <title>Campus Customs | Ticket Run Snapshot</title>
+  <style>
+    :root { color-scheme: light; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #17283b; background: #f3f6f9; }
+    * { box-sizing: border-box; }
+    body { margin: 0; line-height: 1.55; }
+    header { padding: 24px max(22px, calc((100vw - 1180px) / 2)); color: #fff; background: #102b4e; }
+    header p { margin: 0 0 5px; color: #c8d8e8; font-size: .8rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(1.7rem, 4vw, 2.4rem); line-height: 1.15; }
+    main { width: min(1180px, calc(100% - 36px)); margin: 26px auto 48px; }
+    .notice { margin: 0 0 18px; padding: 15px 17px; border: 1px solid #d7a64a; border-left: 5px solid #c28c23; border-radius: 10px; background: #fff8e7; }
+    .notice strong { color: #694b0c; }
+    figure { margin: 0; padding: 12px; border: 1px solid #d6dfe7; border-radius: 14px; background: #fff; box-shadow: 0 12px 30px rgb(16 43 78 / 10%); }
+    figure img { display: block; width: 100%; height: auto; border: 1px solid #e2e8ee; border-radius: 8px; }
+    figcaption { padding: 10px 4px 2px; color: #5b6b7a; font-size: .88rem; }
+    .summary { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
+    article { padding: 16px; border: 1px solid #d6dfe7; border-radius: 12px; background: #fff; }
+    article h2 { margin: 0 0 7px; color: #102b4e; font-size: 1.08rem; }
+    article p { margin: 0; color: #4d5e6f; font-size: .91rem; }
+    .status { display: inline-block; margin-bottom: 8px; padding: 3px 9px; border-radius: 999px; color: #62450e; background: #fff0c9; font-size: .72rem; font-weight: 850; letter-spacing: .04em; text-transform: uppercase; }
+    .blocked { color: #7b332a; background: #fae7e3; }
+    .cash { margin-top: 14px; padding: 15px 17px; border-radius: 12px; color: #eef5fb; background: #17385d; }
+    .cash strong { font-variant-numeric: tabular-nums; }
+    a { color: #174d80; font-weight: 750; }
+    footer { margin-top: 18px; color: #647384; font-size: .82rem; }
+    @media (max-width: 760px) { .summary { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <header>
+    <p>Campus Customs · Homework 5 · Problem 9</p>
+    <h1>Ticket run snapshot</h1>
+  </header>
+  <main>
+    <p class="notice"><strong>Database status:</strong> ticket 101 is <code>blocked</code> pending stock receipt; ticket 102 is <code>resolved</code>; ticket 103 is <code>blocked</code> pending a proposed discount price and a plan for the size-M shortfall. All three approvals have been executed, but approval #3 does not prove stock receipt. The linked PNG is an earlier board capture from before these final status and cash updates; use the live board for the current React view.</p>
+    <figure>
+      <img src="resolved_board.png" alt="Earlier screenshot of The Back Room React dashboard. This capture predates ticket 102's resolved status, ticket 101's approved purchase action, and the final $152 checking balance.">
+      <figcaption>Earlier React-board screenshot retained for provenance; it predates the final run. Current database statuses and cash are summarized below. The live board is available at <a href="http://127.0.0.1:5175">http://127.0.0.1:5175</a> while the local API and Vite server are running.</figcaption>
+    </figure>
+    <section class="summary" aria-label="Ticket outcomes">
+      <article><span class="status blocked">Blocked</span><h2>Ticket 101 · Bulldog tee</h2><p>Invoice 501 ($840) was paid; PO action #3 for one size-S tee was approved at the recorded $8 SKU-level cost basis. Inventory still records 0 units and no receipt, so the order is unfulfilled and no customer draft was saved.</p></article>
+      <article><span class="status">Resolved</span><h2>Ticket 102 · Rent due</h2><p>Facilities verified lease 1 rent of $2,400 due 2026-09-02. Payment #2 was approved and recorded; Boss verified the payment and marked the ticket resolved.</p></article>
+      <article><span class="status blocked">Blocked</span><h2>Ticket 103 · Bulk hoodie discount</h2><p>8 of 20 size-M hoodies are on hand. No proposed discount price is recorded, so margin approval cannot be evaluated. Customer Service saved draft #1 but did not send it.</p></article>
+    </section>
+    <p class="cash"><strong>Cash reconciliation:</strong> $3,400 starting balance − $840 (ticket 101 invoice) − $2,400 (ticket 102 rent) − $8 (ticket 101 PO approval) = <strong>$152 ending balance</strong> in <code>cash_accounts</code>. Three approvals are recorded; none remain pending.</p>
+    <footer>Detailed run outcomes and per-agent contributions: <a href="../outputs/resolved_tickets.json">resolved_tickets.json</a>. The JSON filename is retained as requested; the ticket statuses above remain literal database values.</footer>
+  </main>
+</body>
+</html>
